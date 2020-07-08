@@ -185,7 +185,7 @@ class Vector:
     def eq(self, other):
         return self._binary_op(other, operator.eq)
 
-    def __ne__(self, other):
+    def ne(self, other):
         return self._binary_op(other, operator.ne)
     
     def ge(self, other):
@@ -211,10 +211,13 @@ class Vector:
     __lt__ = lt
     __le__ = le
     __eq__ = eq
+    __ne__ = ne
     __ge__ = ge
     __gt__ = gt
 
-
+copy = Vector.copy
+ones = Vector.ones
+zeros = Vector.zeros
 abs = Vector.abs
 neg = Vector.neg
 log = Vector.log
@@ -239,6 +242,7 @@ lt = Vector.lt
 le = Vector.le
 eq = Vector.eq
 ge = Vector.ge
+ne = Vector.ne
 gt = Vector.gt
 all = Vector.all
 any = Vector.any
