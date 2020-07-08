@@ -84,11 +84,20 @@ class Vector:
         data_new = [op(v) for v in self.data]
         return Vector(data_new)
 
-    def log(self, base=math.e):
-        def _log(v):
-            return math.log(v, base)
-        return self._unary_op(_log)
-        
+    def log(self):
+        # def _log(v):
+        #     return math.log(v, base)
+        return self._unary_op(math.log)
+
+    def log2(self):
+        return self._unary_op(math.log2)
+    
+    def log10(self):
+        return self._unary_op(math.log10)
+    
+    def log1p(self):
+        return self._unary_op(math.log1p)
+
     def exp(self):
         return self._unary_op(math.exp)
 
@@ -209,6 +218,9 @@ class Vector:
 abs = Vector.abs
 neg = Vector.neg
 log = Vector.log
+log2 = Vector.log2
+log10 = Vector.log10
+log1p = Vector.log1p
 exp = Vector.exp
 sin = Vector.sin
 cos = Vector.cos
@@ -230,4 +242,5 @@ ge = Vector.ge
 gt = Vector.gt
 all = Vector.all
 any = Vector.any
+fill = Vector.fill
     
