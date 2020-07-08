@@ -1,0 +1,1 @@
+- [ ] add support for other trigonometric functions (asin, atan, atanh, ...)
