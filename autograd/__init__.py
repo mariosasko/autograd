@@ -1,5 +1,7 @@
-from .node import Variable
+from .node import Node, Variable
+from .node import (abs, neg, log, log2, log10, log1p, 
+                   exp, sin, cos, tan, sinh, cosh, tanh, sum, sigmoid, relu,
+                   add, sub, mul, div, pow, matmul) 
+# from .node import lt, le, eq, ne, ge, gt, all, any
 from .vector import Vector
-# from .vector import (abs, neg, log, log2, log10, log1p, exp, sin, cos, tan, sinh, cosh, tanh, 
-#                      pow, add, sub, mul, matmul, div, sum, 
-#                      lt, le, eq, ge, gt, all, any)
+from .grad import grad

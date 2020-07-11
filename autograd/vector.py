@@ -80,13 +80,20 @@ class Vector:
     def __len__(self):
         return self.dim
 
+    def __int__(self):
+        return int(self.item())
+
+    def __float__(self):
+        return float(self.item())
+
+    def __complex__(self):
+        return complex(self.item())
+
     def _unary_op(self, op):
         data_new = [op(v) for v in self.data]
         return Vector(data_new)
 
     def log(self):
-        # def _log(v):
-        #     return math.log(v, base)
         return self._unary_op(math.log)
 
     def log2(self):
@@ -132,21 +139,23 @@ class Vector:
         if isinstance(other, numbers.Number):
             data = [op(v, other) for v in self.data]
         elif isinstance(other, Vector):
-            if self.dim != other.dim:
-                raise ValueError("operand dimensions doesn't match")
-            data = [op(u, v) for u, v in zip(self.data, other.data)]
+            if self.dim == other.dim:
+                data = [op(u, v) for u, v in zip(self.data, other.data)]
+            elif self.dim == 1:
+                scalar = self[0].item()
+                data = [op(v, scalar) for v in other.data]
+            elif other.dim == 1:
+                scalar = other[0].item()
+                data = [op(v, scalar) for v in self.data]
+            else:
+                raise ValueError("operand dimensions don't match and aren't broadcastable")
         else:
             return NotImplemented
 
         return Vector(data)
     
-    def pow(self, other):
-        return self._binary_op(other, operator.pow)
-
-    def __rpow__(self, other):
-        if not isinstance(other, numbers.Number):
-            return NotImplemented
-        return Vector.zeros(self.dim).fill(other).pow(self)
+    def sum(self):
+        return Vector([builtins.sum(self.data)])
 
     def add(self, other):
         return self._binary_op(other, operator.add)
@@ -155,26 +164,31 @@ class Vector:
         return self + (-other)
 
     def __rsub__(self, other):
-        return other + (-self)
+        return -self + other
 
     def mul(self, other):
         return self._binary_op(other, operator.mul)
-
-    def matmul(self, other):
-        if not isinstance(other, Vector):
-            raise TypeError('one of the operands is not a vector')
-        if self.dim != other.dim:
-            raise ValueError("operand dimensions doesn't match")
-        return (self * other).sum()
 
     def div(self, other):
         return self._binary_op(other, operator.truediv)
 
     def __rtruediv__(self, other):
         return (self ** -1) * other
+    
+    def pow(self, other):
+        return self._binary_op(other, operator.pow)
 
-    def sum(self):
-        return Vector([builtins.sum(self.data)])
+    def __rpow__(self, other):
+        if not isinstance(other, numbers.Number):
+            return NotImplemented
+        return Vector.zeros(self.dim).fill(other).pow(self)
+    
+    def matmul(self, other):
+        if not isinstance(other, Vector):
+            raise TypeError('one of the operands is not a vector')
+        if self.dim != other.dim:
+            raise ValueError("operand dimensions don't match")
+        return (self * other).sum()
 
     def lt(self, other):
         return self._binary_op(other, operator.lt)
@@ -200,20 +214,23 @@ class Vector:
     def any(self):
         return builtins.any(self)
 
-    __int__ = __float__ = __complex__ = item
-    __pow__ = pow
+    __abs__ = abs
     __neg__ = neg
+  
     __radd__ = __add__ = add
     __sub__ = sub
     __rmul__ = __mul__ = mul
-    __rmatmul__ = __matmul__ = matmul
     __truediv__ = div
+    __pow__ = pow
+    __rmatmul__ = __matmul__ = matmul
+
     __lt__ = lt
     __le__ = le
     __eq__ = eq
     __ne__ = ne
     __ge__ = ge
     __gt__ = gt
+
 
 copy = Vector.copy
 ones = Vector.ones
@@ -231,13 +248,13 @@ tan = Vector.tan
 sinh = Vector.sinh
 cosh = Vector.cosh
 tanh = Vector.tanh
-pow = Vector.pow
+sum = Vector.sum
 add = Vector.add
 sub = Vector.sub
 mul = Vector.mul
-matmul = Vector.matmul
 div = Vector.div
-sum = Vector.sum
+pow = Vector.pow
+matmul = Vector.matmul
 lt = Vector.lt
 le = Vector.le
 eq = Vector.eq
@@ -247,4 +264,3 @@ gt = Vector.gt
 all = Vector.all
 any = Vector.any
 fill = Vector.fill
-    

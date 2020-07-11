@@ -1,6 +1,7 @@
 import math
 from .node import Node
 from .utils import abs_grad, sigmoid
+from .vector import Vector
 from .vector import (abs, neg, log, log2, log10, log1p, exp, sin, cos, tan, sinh, cosh, tanh, 
                      pow, add, sub, mul, matmul, div, sum, fill)
 
@@ -14,7 +15,7 @@ class UnaryOp(Node):
 
     def __init__(self, parent):
         super().__init__([parent])
-        self.parent = parent
+        self.parent = self.parents[0]
 
     @property
     def value(self):
@@ -92,7 +93,7 @@ class Sinh(UnaryOp):
 
 class Cosh(UnaryOp):
     fn = cosh
-    fn_grad = lambda x: -sinh(x)
+    fn_grad = lambda x: sinh(x)
 
 
 class Tanh(UnaryOp):
@@ -105,33 +106,59 @@ class Sum(UnaryOp):
     fn_grad = lambda x: fill(x, 1)
 
 
-class BinaryOp:
+class BinaryOp(Node):
     fn = None
     fn_grad_one = None
     fn_grad_two = None
 
     def __init__(self, parent_one, parent_two):
         super().__init__([parent_one, parent_two])
-        self.parent_one = parent_one
-        self.parent_two = parent_two
+        self.parent_one = self.parents[0]
+        self.parent_two = self.parents[1]
 
     @property
     def value(self):
         return self.__class__.fn(self.parent_one.value, self.parent_two.value)
 
     def partial_derivative(self, prev_grad, wrt):
+        max_dim = max(self.parent_one.value.dim, self.parent_two.value.dim)
+        parent_one_value = BinaryOp._broadcast_to_dim(self.parent_one.value, max_dim)
+        parent_two_value = BinaryOp._broadcast_to_dim(self.parent_two.value, max_dim)
+
         if wrt == self.parent_one:
-            return prev_grad * self.__class__.fn_grad_one(self.parent_one.value, self.parent_two.value)
+            next_grad = prev_grad * self.__class__.fn_grad_one(parent_one_value, 
+                                                               parent_two_value)
+            # next_grad = prev_grad * self.__class__.fn_grad_one(self.parent_one.value, 
+            #                                                    self.parent_two.value)
+            return BinaryOp._reduce_to_dim(next_grad, self.parent_one.dim)
         if wrt == self.parent_two:
-            return prev_grad * self.__class__.fn_grad_two(self.parent_one.value, self.parent_two.value)
+            next_grad = prev_grad * self.__class__.fn_grad_two(parent_one_value, 
+                                                               parent_two_value)
+            # next_grad = prev_grad * self.__class__.fn_grad_two(self.parent_one.value, 
+            #                                                    self.parent_two.value)
+            return BinaryOp._reduce_to_dim(next_grad, self.parent_two.dim)
         return 0
 
-
-class Pow(BinaryOp):
-    fn = pow
-    fn_grad_one = lambda x, y: y * x ** (y - 1)
-    fn_grad_two = lambda x, y: log(x) * x ** y
+    @staticmethod
+    def _reduce_to_dim(vector, dim):
+        if dim == 1:
+            return sum(vector)
+        elif vector.dim == dim:
+            return vector
+        else:
+            raise ValueError('reduction is not possible '
+                             'due to mismatch in the number of dimensions')
     
+    @staticmethod
+    def _broadcast_to_dim(vector, dim):
+        if vector.dim == 1:
+            return Vector.zeros(dim).fill(vector.item())
+        elif vector.dim == dim:
+            return vector
+        else:
+            raise ValueError('broadcast is not possible '
+                             'due to mismatch in the number of dimensions')
+
 
 class Add(BinaryOp):
     fn = add
@@ -140,7 +167,7 @@ class Add(BinaryOp):
 
 
 class Sub(BinaryOp):
-    fn = add
+    fn = sub
     fn_grad_one = lambda x, y: fill(x, 1)
     fn_grad_two = lambda x, y: fill(y, -1)
 
@@ -151,10 +178,19 @@ class Mul(BinaryOp):
     fn_grad_two = lambda x, y: x
 
 
-Matmul = Mul
+class Matmul(BinaryOp):
+    fn = matmul
+    fn_grad_one = lambda x, y: y
+    fn_grad_two = lambda x, y: x
 
 
 class Div(BinaryOp):
     fn = div
     fn_grad_one = lambda x, y: 1 / y 
     fn_grad_two = lambda x, y: -x / y ** 2
+
+
+class Pow(BinaryOp):
+    fn = pow
+    fn_grad_one = lambda x, y: y * x ** (y - 1)
+    fn_grad_two = lambda x, y: log(x) * x ** y

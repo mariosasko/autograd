@@ -77,5 +77,6 @@ class TestVector(unittest.TestCase):
         self.assertTrue((v1 == v1).all())
         self.assertTrue((v1 != v2).any())
 
+
 if __name__ == '__main__':
     unittest.main()
