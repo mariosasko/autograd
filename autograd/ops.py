@@ -1,12 +1,50 @@
 import math
 from .node import Node
-from .utils import abs_grad, sigmoid
 from .vector import Vector
-from .vector import (abs, neg, log, log2, log10, log1p, exp, sin, cos, tan, sinh, cosh, tanh, 
-                     pow, add, sub, mul, matmul, div, sum, fill)
+# from .vector import (abs, neg, log, log2, log10, log1p, exp, sin, cos, tan, sinh, cosh, tanh, 
+#                      pow, add, sub, mul, matmul, div, sum, fill)
 
 
+copy = Vector.copy
+ones = Vector.ones
+zeros = Vector.zeros
+abs = Vector.abs
+neg = Vector.neg
+log = Vector.log
+log2 = Vector.log2
+log10 = Vector.log10
+log1p = Vector.log1p
+exp = Vector.exp
+sin = Vector.sin
+cos = Vector.cos
+tan = Vector.tan
+sinh = Vector.sinh
+cosh = Vector.cosh
+tanh = Vector.tanh
+sum = Vector.sum
+add = Vector.add
+sub = Vector.sub
+mul = Vector.mul
+div = Vector.div
+pow = Vector.pow
+matmul = Vector.matmul
+lt = Vector.lt
+le = Vector.le
+eq = Vector.eq
+ge = Vector.ge
+ne = Vector.ne
+gt = Vector.gt
+all = Vector.all
+any = Vector.any
+fill = Vector.fill
 EPSILON = 1e-12
+
+
+def sigmoid(x):
+    return 1 / (1 + exp(-x))
+
+def abs_grad(x):
+    return Vector([1 if v > 0 else 0 if v == 0 else -1 for v in x])
 
 
 class UnaryOp(Node):

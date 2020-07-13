@@ -1,8 +1,8 @@
 from abc import ABC, abstractmethod
 import numbers
 from .vector import Vector
-from .vector import (lt as Lt, le as Le, eq as Eq, ne as Ne, ge as Ge, gt as Gt, 
-                     all as All, any as Any, fill as Fill)
+# from .vector import (lt as Lt, le as Le, eq as Eq, ne as Ne, ge as Ge, gt as Gt, 
+#                      all as All, any as Any, fill as Fill)
 
 
 class Node(ABC):
@@ -232,36 +232,3 @@ class Variable(Node):
 
     def fill(self, val):
         return self.__class__(self._value.fill(val))
-    
-
-abs = Node.abs
-neg = Node.neg
-log = Node.log
-log2 = Node.log2
-log10 = Node.log10
-log1p = Node.log1p
-exp = Node.exp
-sin = Node.sin
-cos = Node.cos
-tan = Node.tan
-sinh = Node.sinh
-cosh = Node.cosh
-tanh = Node.tanh
-sigmoid = Node.sigmoid
-relu = Node.relu
-sum = Node.sum
-add = Node.add
-sub = Node.sub
-mul = Node.mul
-div = Node.div
-pow = Node.pow
-matmul = Node.matmul
-# lt = Node.lt
-# le = Node.le
-# eq = Node.eq
-# ge = Node.ge
-# ne = Node.ne
-# gt = Node.gt
-# all = Node.all
-# any = Node.any
-

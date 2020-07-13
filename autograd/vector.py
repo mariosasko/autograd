@@ -230,37 +230,3 @@ class Vector:
     __ne__ = ne
     __ge__ = ge
     __gt__ = gt
-
-
-copy = Vector.copy
-ones = Vector.ones
-zeros = Vector.zeros
-abs = Vector.abs
-neg = Vector.neg
-log = Vector.log
-log2 = Vector.log2
-log10 = Vector.log10
-log1p = Vector.log1p
-exp = Vector.exp
-sin = Vector.sin
-cos = Vector.cos
-tan = Vector.tan
-sinh = Vector.sinh
-cosh = Vector.cosh
-tanh = Vector.tanh
-sum = Vector.sum
-add = Vector.add
-sub = Vector.sub
-mul = Vector.mul
-div = Vector.div
-pow = Vector.pow
-matmul = Vector.matmul
-lt = Vector.lt
-le = Vector.le
-eq = Vector.eq
-ge = Vector.ge
-ne = Vector.ne
-gt = Vector.gt
-all = Vector.all
-any = Vector.any
-fill = Vector.fill
