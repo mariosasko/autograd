@@ -55,7 +55,7 @@ and this the computation graph that `autograd` builds.
 
 ![](assets/log_reg_comp_graph.png)
 
-# References 
+## References 
 
 These are the references that were used to implement the package:
 
