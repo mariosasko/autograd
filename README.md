@@ -24,7 +24,7 @@ pip install .
 
 The example below shows how to compute the gradients of a binary logistic regression model. Since autograd builds the graph dynamically, it supports conditionals and loops in Python.
 
-```
+```python
 >>> import autograd as ag
 >>> # model parameters
 >>> w = ag.Variable(ag.Vector([-0.5, 0.3, 1]))
