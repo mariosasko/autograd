@@ -1,10 +1,10 @@
 # Autograd
 
-autograd is a automatic differentiation package that relies on operator overloading to dynamically build a computation graph and compute gradients during the backward pass. The package is implemented fully in Python and has no outside dependencies of any sort.
+autograd is an automatic differentiation package that relies on operator overloading to dynamically build a computation graph and compute the gradients during the backward pass. The package is implemented fully in Python and has no outside dependencies of any sort.
 
 ## Motivation
 
-The goal of this project is to better understand the idea behind automatic differentiation that is present in basically every modern Deep Learning framework.
+The goal of this project is to better understand the idea behind automatic differentiation, the backbone of every modern Deep Learning framework.
 
 ## Current state
 
@@ -22,7 +22,7 @@ pip install .
 
 ### Example
 
-The example below shows how to compute the gradients of a binary logistic regression model. Since autograd builds the graph dynamically, it supports conditionals and loops in Python.
+The example below shows how to compute the gradients of a binary logistic regression model. Since autograd builds the graph dynamically, it allows conditionals and loops.
 
 ```python
 >>> import autograd as ag
@@ -51,13 +51,11 @@ Vector([-3.49781451425635, -0.139912580570254, -1.2242350799897226])
 Vector(-0.349781451425635)
 ```
 
-and this the computation graph that `autograd` builds.
+The computation graph built by `autograd` looks as follows:
 
 ![](assets/log_reg_comp_graph.png)
 
 ## References 
-
-These are the references that were used to implement the package:
 
 * [Atilim Gunes Baydin, Barak A. Pearlmutter, Alexey Andreyevich Radul, Jeffrey Mark Siskind: Automatic differentiation in machine learning: a survey](https://arxiv.org/pdf/1502.05767.pdf)
 * [Charles C. Margossian: A Review of Automatic Differentiation and its Efficient Implementation](https://arxiv.org/pdf/1811.05031.pdf)
